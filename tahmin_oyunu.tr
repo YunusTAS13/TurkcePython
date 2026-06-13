@@ -1,0 +1,34 @@
+# Sayı Tahmin Oyunu — TürkçePython demo
+
+içe_aktar random
+
+gizli = random.randint(1, 100)
+tahmin_hakkı = 7
+deneme = 0
+
+yaz("╔══════════════════════════════╗")
+yaz("║  Sayı Tahmin Oyunu           ║")
+yaz("║  1 ile 100 arasında bir sayı ║")
+yaz("╚══════════════════════════════╝")
+yaz("7 hakkın var. Başla!\n")
+
+döngü deneme < tahmin_hakkı:
+    kalan = tahmin_hakkı - deneme
+    dene:
+        tahmin = tam_sayı(gir(metin(kalan) + " hakkın kaldı → "))
+    yakala ValueError:
+        yaz("Lütfen bir sayı gir!")
+        devam
+
+    deneme = deneme + 1
+
+    eğer tahmin < gizli:
+        yaz("📈 Daha büyük bir sayı dene!\n")
+    yoksa_eğer tahmin > gizli:
+        yaz("📉 Daha küçük bir sayı dene!\n")
+    yoksa:
+        yaz("\n🎉 TEBRİKLER! Sayıyı", deneme, "denemede buldun!")
+        kes
+
+yoksa:
+    yaz("\n😞 Hakkın bitti. Gizli sayı:", gizli)

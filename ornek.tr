@@ -1,0 +1,89 @@
+# ─────────────────────────────────────────────
+# TürkçePython - Örnek Program
+# Python 3.12+ ile test edildi
+# ─────────────────────────────────────────────
+
+# ── 1. Temel yazdırma ──
+yaz("Merhaba, Dünya!")
+
+# ── 2. Değişkenler ve matematik ──
+isim = "Ahmet"
+yaş = 25
+yaz("Adım", isim, "— Yaşım:", yaş)
+
+# ── 3. Koşullar ──
+eğer yaş >= 18:
+    yaz("Yetişkin")
+yoksa:
+    yaz("Çocuk")
+
+# ── 4. Döngü ──
+yaz("\n--- 1'den 5'e ---")
+için i içinde aralık(1, 6):
+    yaz(i, "karesi =", i * i)
+
+# ── 5. Fonksiyon tanımlama ──
+tanım selamla(ad, nezaket=Doğru):
+    eğer nezaket:
+        yaz("Sayın", ad, ", hoş geldiniz!")
+    yoksa:
+        yaz("Naber", ad)
+
+selamla("Ayşe")
+selamla("Mehmet", nezaket=Yanlış)
+
+# ── 6. Liste işlemleri ──
+yaz("\n--- Liste ---")
+meyveler = ["elma", "armut", "muz", "kiraz"]
+için meyve içinde meyveler:
+    eğer uzunluk(meyve) > 4:
+        yaz(meyve, "→ uzun isim")
+
+yaz("Toplam meyve:", uzunluk(meyveler))
+
+# ── 7. Sözlük ──
+yaz("\n--- Sözlük ---")
+kişi = {"ad": "Zeynep", "şehir": "İstanbul", "puan": 95}
+için anahtar, değer içinde kişi.items():
+    yaz(anahtar, ":", değer)
+
+# ── 8. Hata yakalama ──
+yaz("\n--- Hata Yakalama ---")
+dene:
+    sonuç = 10 / 0
+yakala ZeroDivisionError olarak h:
+    yaz("Hata yakalandı:", h)
+
+# ── 9. Sınıf ──
+yaz("\n--- Sınıf ---")
+sınıf Hayvan:
+    tanım __init__(öz, isim, ses):
+        öz.isim = isim
+        öz.ses = ses
+
+    tanım konuş(öz):
+        yaz(öz.isim, "diyor ki:", öz.ses)
+
+kedi = Hayvan("Kedi", "Miyav")
+köpek = Hayvan("Köpek", "Hav hav")
+kedi.konuş()
+köpek.konuş()
+
+# ── 10. Liste üreteci (list comprehension) ──
+yaz("\n--- Liste Üreteci ---")
+çiftler = [x için x içinde aralık(1, 11) eğer x % 2 == 0]
+yaz("1-10 arası çift sayılar:", çiftler)
+
+# ── 11. Lambda & harita ──
+kareler = liste(harita(lambda x: x**2, aralık(1, 6)))
+yaz("1-5 kareler:", kareler)
+
+# ── 12. Özyinelemeli fonksiyon ──
+tanım faktöriyel(n):
+    eğer n <= 1:
+        dön 1
+    dön n * faktöriyel(n - 1)
+
+yaz("\n--- Faktöriyel ---")
+için i içinde aralık(1, 8):
+    yaz(metin(i) + "! =", faktöriyel(i))
