@@ -2,6 +2,14 @@
 
 **Sürüm: 1.1**
 
+## 1.1 — Hatalar ve Düzeltmeler
+
+- Satır tabanlı çeviri yorumları ve string içeriklerini değiştiriyordu; tokenizer kullanılarak yalnızca Python isimleri çevriliyor.
+- Çok satırlı stringlerde Türkçe kelimeler yanlışlıkla anahtar kelimeye dönüşüyordu; artık string ve yorumlar korunuyor.
+- REPL her komutta geçmişteki kodu yeniden çalıştırıyordu; kalıcı çalışma alanı ve tamamlanmamış blok desteği eklendi.
+- Doğru `değerlendir` yazımı eksikti; doğru ve eski yazım biçimleri destekleniyor.
+- IDE’de `SystemExit`/`KeyboardInterrupt` hataları arayüzü kilitleyebiliyordu; çalışma yakalama bölümü genişletildi.
+
 Tamamen Türkçe sözdizimli bir programlama dili — Python 3.12+ üzerinde çalışır.
 
 ---
