@@ -8,6 +8,9 @@ import sys
 import re
 import math
 import os
+import io
+import codeop
+import tokenize
 
 # ──────────────────────────────────────────────
 # ANAHTAR KELİME DÖNÜŞÜM TABLOSU
@@ -144,6 +147,7 @@ TURKCE_FONKSIYONLAR = {
     "bellek_görüntüsü": "memoryview",
     "bellek_goruntusu": "memoryview",
     "derle":        "compile",
+    "değerlendir":  "eval",
     "değerlendır":  "eval",
     "degerlendir":  "eval",
     "çalıştır":     "exec",
@@ -168,15 +172,25 @@ TURKCE_FONKSIYONLAR = {
 # ──────────────────────────────────────────────
 
 def turkce_python_cevir(kaynak: str) -> str:
-    """Türkçe kaynak kodunu geçerli Python koduna dönüştürür."""
-    satirlar = kaynak.splitlines()
-    sonuc = []
+    """Türkçe kaynak kodunu geçerli Python koduna dönüştürür.
 
-    for satir in satirlar:
-        donusturulmus = satir_cevir(satir)
-        sonuc.append(donusturulmus)
-
-    return "\n".join(sonuc)
+    Python tokenizer kullanıldığı için yorumlar, çok satırlı string'ler ve
+    string içindeki Türkçe kelimeler artık kaynak kodu gibi yorumlanmaz.
+    """
+    try:
+        tokenler = tokenize.generate_tokens(io.StringIO(kaynak).readline)
+        sonuc = []
+        for token in tokenler:
+            if token.type == tokenize.NAME:
+                yeni = TURKCE_FONKSIYONLAR.get(token.string)
+                if yeni is None:
+                    yeni = KELIMELER.get(token.string, token.string)
+                token = token._replace(string=yeni)
+            sonuc.append(token)
+        return tokenize.untokenize(sonuc)
+    except (tokenize.TokenError, IndentationError):
+        # REPL'de tamamlanmamış blok/string için satır tabanlı geri dönüş.
+        return "\n".join(satir_cevir(s) for s in kaynak.splitlines())
 
 
 def satir_cevir(satir: str) -> str:
@@ -230,7 +244,7 @@ def string_parcala(satir: str):
                 i = j
             # Yorum satırı # → geri kalanı olduğu gibi koy
             elif satir[i] == '#':
-                sonuc.append((satir[i:], False))
+                sonuc.append((satir[i:], True))
                 break
             else:
                 # Normal metin biriktir
@@ -333,19 +347,21 @@ def dosya_calistir(dosya_yolu: str):
 
 def interaktif_mod():
     """REPL — satır satır Türkçe kod çalıştır."""
-    print("TürkçePython 1.0  |  Python", sys.version.split()[0])
+    print("TürkçePython 1.1  |  Python", sys.version.split()[0])
     print("Çıkmak için: çık() veya Ctrl+C\n")
 
     gecmis = []
+    global_degiskenler = {"__name__": "__main__"}
+    derleyici = codeop.CommandCompiler()
 
     while True:
         try:
-            satir = input(">>> ")
+            satir = input("... " if gecmis else ">>> ")
         except (EOFError, KeyboardInterrupt):
             print("\nGüle güle!")
             break
 
-        if satir.strip() in ("çık()", "cik()", "exit()", "quit()"):
+        if not gecmis and satir.strip() in ("çık()", "cik()", "exit()", "quit()"):
             print("Güle güle!")
             break
 
@@ -356,15 +372,14 @@ def interaktif_mod():
         python_kod = turkce_python_cevir("\n".join(gecmis))
 
         try:
-            kod = compile(python_kod, "<girdi>", "exec")
-            exec(kod, {"__name__": "__main__"})
+            kod = derleyici(python_kod, "<girdi>", "exec")
+            if kod is None:
+                continue
+            exec(kod, global_degiskenler)
+            gecmis = []
         except SyntaxError:
-            # Belki çok satırlı bir blok — devam et
-            try:
-                devam = input("... ")
-                gecmis.append(devam)
-            except (EOFError, KeyboardInterrupt):
-                gecmis = []
+            print("💥 SözDizimHatası: geçersiz veya tamamlanmamış ifade")
+            gecmis = []
         except Exception as h:
             print(turkce_hata_formatla(h))
             gecmis = []

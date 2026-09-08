@@ -1,5 +1,7 @@
 # TürkçePython 🇹🇷
 
+**Sürüm: 1.1**
+
 Tamamen Türkçe sözdizimli bir programlama dili — Python 3.12+ üzerinde çalışır.
 
 ---

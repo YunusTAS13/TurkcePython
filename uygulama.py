@@ -571,7 +571,7 @@ class TurkcePythonIDE(tk.Tk):
         except SyntaxError as h:
             hata_var = True
             çıktı_buf.write(f"\n💥 SözDizimHatası: {h.msg}\n   Satır {h.lineno}: {h.text or ''}\n")
-        except Exception as h:
+        except BaseException as h:
             hata_var = True
             çıktı_buf.write(turkce_hata_formatla(h))
  
@@ -615,7 +615,7 @@ class TurkcePythonIDE(tk.Tk):
         tk.Label(pencere, text="TürkçePython IDE",
             bg=TEMA["arkaplan"], fg=TEMA["vurgu"],
             font=tkfont.Font(family="Segoe UI", size=18, weight="bold")).pack(pady=(30,4))
-        tk.Label(pencere, text="Sürüm 1.0",
+        tk.Label(pencere, text="Sürüm 1.1",
             bg=TEMA["arkaplan"], fg=TEMA["metin_soluk"],
             font=tkfont.Font(family="Segoe UI", size=11)).pack()
         tk.Label(pencere, text="\nTamamen Türkçe sözdizimli\nbir programlama dili ve editörü.\n\nPython 3.8+ üzerinde çalışır.",
@@ -725,4 +725,3 @@ class TurkcePythonIDE(tk.Tk):
 if __name__ == "__main__":
     uygulama = TurkcePythonIDE()
     uygulama.mainloop()
- 
